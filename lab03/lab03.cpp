@@ -64,35 +64,49 @@ void show_histogram_text(const vector<size_t> &bins) {
 		}
 	}
 
-	for (size_t i = 0; i < bins.size(); i++) {
-		if (bins[i] < 100) {
-			cout << ' ';
-		}
+	cout << endl;
 
-		if (bins[i] < 10) {
-			cout << ' ';
-		}
+	vector<size_t> bins_scaling(bins.size());
 
-		cout << bins[i] << "|";
-
-		size_t height;
-		if (max_count > MAX_ASTERISK) {
+	if (max_count > MAX_ASTERISK) {
+		for (size_t i = 0; i < bins.size(); i++) {
 			if (bins[i] > MAX_ASTERISK) {
-				height = MAX_ASTERISK * 1.0;
+				bins_scaling[i] = MAX_ASTERISK * 1.0;
 			}
 			else {
-				height = MAX_ASTERISK * (static_cast<double>(bins[i]) / max_count);
+				bins_scaling[i] = MAX_ASTERISK * (static_cast<double>(bins[i]) / max_count);
+			} 
+		}
+	}
+	else {
+		bins_scaling = bins;
+	}
+
+	if (max_count > MAX_ASTERISK) max_count = MAX_ASTERISK;
+
+		// Отображаем гистограмму вертикально
+	for (size_t row = max_count; row > 0; --row) {
+		for (size_t frequency : bins_scaling) {
+			if (frequency >= row) {
+				std::cout << "*	";
+			}
+			else {
+				std::cout << "	";
 			}
 		}
-		else {
-			height = bins[i];
-		}
-
-		for (size_t j = 0; j < height; j++) {
-			cout << '*';
-		}
-		cout << '\n';
+		std::cout << std::endl;
 	}
+
+	for (size_t frequency : bins_scaling) {
+		std::cout << "_	";
+	}
+	cout << endl;
+
+		// Выводим подписи внизу
+	for (size_t frequency : bins) {
+		cout << frequency << "	";
+	}
+	cout << endl;
 }
 
 void svg_begin(double width, double height) {
@@ -156,34 +170,6 @@ void show_histogram_svg(const vector<size_t>& bins) {
 	svg_end();	
 }
 
-void building_histogram(const vector <double>& numbers) {
-	size_t bin_count;
-	cerr << "Input the count of bins: ";
-	cin >> bin_count;
-
-	const auto bins = make_histogram(numbers, bin_count);
-
-	show_histogram_svg(bins);
-
-	cerr << "Are you satisfied with the result?\n" << "0 - no; 1 - yes\n";
-	size_t answer;
-	cin >> answer;
-
-	switch (answer)
-	{
-	case 0:
-		cerr << "OK, let's rebuild the histogram\n";
-		building_histogram(numbers);
-		break;
-	case 1:
-		cerr << "OK, goodbye";
-		break;
-	default:
-		cerr << "Wrong answer";
-		break;
-	}
-}
-
 int main() {
 	size_t number_count;
 
@@ -192,5 +178,12 @@ int main() {
 
 	const auto numbers = input_numbers(number_count);
 
-	building_histogram(numbers);
+	size_t bin_count;
+
+	cerr << "Input the count of bins: ";
+	cin >> bin_count;
+
+	const auto bins = make_histogram(numbers, bin_count);
+
+	show_histogram_text(bins);
 }
