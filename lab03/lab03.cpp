@@ -1,7 +1,4 @@
-﻿#include <iostream>
-#include <vector>
-#include <string>
-using namespace std;
+﻿#include "lab03.h"
 
 const size_t SCREEN_WIDTH = 80;
 const size_t MAX_ASTERISK = SCREEN_WIDTH - 3 - 1;
@@ -88,25 +85,25 @@ void show_histogram_text(const vector<size_t> &bins) {
 	for (size_t row = max_count; row > 0; --row) {
 		for (size_t frequency : bins_scaling) {
 			if (frequency >= row) {
-				std::cout << "*	";
+				cout << "*	";
 			}
 			else {
-				std::cout << "	";
+				cout << "	";
 			}
 		}
-		std::cout << std::endl;
+		cout << '\n';
 	}
 
 	for (size_t frequency : bins_scaling) {
-		std::cout << "_	";
+		cout << "_	";
 	}
-	cout << endl;
+	cout << '\n';
 
 		// Выводим подписи внизу
 	for (size_t frequency : bins) {
 		cout << frequency << "	";
 	}
-	cout << endl;
+	cout << '\n';
 }
 
 void svg_begin(double width, double height) {
@@ -126,21 +123,19 @@ void svg_text(double left, double baseline, string text) {
 	cout << "<text x='" << left << "' y='" << baseline << "'>" << text << "</text>";
 }
 
-void svg_rect(double x, double y, double width, double height, string stroke = "black", string fill = "black") {
+void svg_rect(double x, double y, double width, double height, string stroke, string fill) {
 	cout << "<rect x='" << x << "' y='" << y << "' width='" << width << "' height='" << height << "' stroke='" << stroke << "' fill='" << fill << "' />";
 }
 
 void show_histogram_svg(const vector<size_t>& bins) {
 	const auto IMAGE_WIDTH = 400;
 	const auto IMAGE_HEIGHT = 300;
-	const auto TEXT_LEFT = 20;
-	const auto TEXT_BASELINE = 20;
-	const auto TEXT_WIDTH = 50;
-	const auto BIN_HEIGHT = 30;
-	const auto BLOCK_WIDTH = 10;
+	auto TEXT_LEFT = 20;
+	const auto TEXT_BASELINE = 270;
+	const auto BIN_BASELINE = 250;
+	const auto BIN_WIDTH = 20;
 
 	svg_begin(IMAGE_WIDTH, IMAGE_HEIGHT);
-	double top = 0;
 
 	size_t max_count = 0;
 	for (size_t bin : bins) {
@@ -149,23 +144,13 @@ void show_histogram_svg(const vector<size_t>& bins) {
 		}
 	}
 
-	double bin_width;
+	double BIN_HEIGHT;
 	for (size_t bin : bins) {
-		if (max_count > MAX_ASTERISK) {
-			if (bin > MAX_ASTERISK) {
-				bin_width = MAX_ASTERISK * 1.0 * BLOCK_WIDTH;
-			}
-			else {
-				bin_width = MAX_ASTERISK * (static_cast<double>(bin) / max_count) * BLOCK_WIDTH;
-			}
-		}
-		else {
-			bin_width = BLOCK_WIDTH * bin;
-		}
+		BIN_HEIGHT = BIN_BASELINE * (static_cast<double>(bin) / max_count);
 
-		svg_text(TEXT_LEFT, top + TEXT_BASELINE, to_string(bin));
-		svg_rect(TEXT_WIDTH, top, bin_width, BIN_HEIGHT);
-		top += BIN_HEIGHT;
+		svg_rect(TEXT_LEFT, BIN_BASELINE - BIN_HEIGHT, BIN_WIDTH, BIN_HEIGHT, "black", "gray");
+		svg_text(TEXT_LEFT, TEXT_BASELINE, to_string(bin));
+		TEXT_LEFT += BIN_WIDTH + 10;
 	}
 	svg_end();	
 }
@@ -185,5 +170,5 @@ int main() {
 
 	const auto bins = make_histogram(numbers, bin_count);
 
-	show_histogram_text(bins);
+	show_histogram_svg(bins);
 }
