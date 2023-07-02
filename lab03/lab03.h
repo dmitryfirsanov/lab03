@@ -4,9 +4,16 @@
 #include <string>
 using namespace std;
 
+struct Input {
+	vector<double> numbers;
+	size_t bin_count;
+};
+
+Input read_input(istream& in);
+
 vector<double> input_numbers(istream& in, size_t count);
 pair <double, double> find_minmax(const vector<double>& numbers);
-vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count);
+vector<size_t> make_histogram(const Input& data);
 void show_histogram_text(const vector<size_t>& bins);
 
 // SVG

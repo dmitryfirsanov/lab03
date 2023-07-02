@@ -3,10 +3,7 @@
 const size_t SCREEN_WIDTH = 80;
 const size_t MAX_ASTERISK = SCREEN_WIDTH - 3 - 1;
 
-struct Input {
-	vector<double> numbers;
-	size_t bin_count;
-};
+
 
 vector<double> input_numbers(istream& in, size_t count) {
 	vector<double> result(count);
@@ -48,7 +45,9 @@ pair <double, double> find_minmax(const vector<double> &numbers) {
 	return pair<double, double>(min, max);
 }
 
-vector<size_t> make_histogram(const vector<double> &numbers, size_t bin_count) {
+vector<size_t> make_histogram(const Input& data) {
+	const auto [numbers, bin_count] = data;
+
 	vector<size_t> result(bin_count);
 
 	auto [min, max] = find_minmax(numbers);
@@ -179,7 +178,7 @@ void show_histogram_svg(const vector<size_t>& bins) {
 
 int main() {
 	const auto input = read_input(cin);
-	const auto bins = make_histogram(input.numbers, input.bin_count);
+	const auto bins = make_histogram(input);
 
 	show_histogram_text(bins);
 }
