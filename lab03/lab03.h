@@ -4,7 +4,7 @@
 #include <string>
 using namespace std;
 
-vector<double> input_numbers(size_t count);
+vector<double> input_numbers(istream& in, size_t count);
 pair <double, double> find_minmax(const vector<double>& numbers);
 vector<size_t> make_histogram(const vector<double>& numbers, size_t bin_count);
 void show_histogram_text(const vector<size_t>& bins);
