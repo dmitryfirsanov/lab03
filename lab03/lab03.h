@@ -1,7 +1,10 @@
 #pragma once
+#define CURL_STATICLIB
 #include <iostream>
 #include <vector>
 #include <string>
+
+#include "curl.h"
 using namespace std;
 
 struct Input {
@@ -9,7 +12,7 @@ struct Input {
 	size_t bin_count;
 };
 
-Input read_input(istream& in);
+Input read_input(istream& in, bool prompt);
 
 vector<double> input_numbers(istream& in, size_t count);
 pair <double, double> find_minmax(const vector<double>& numbers);
