@@ -175,9 +175,40 @@ void show_histogram_svg(const vector<size_t>& bins) {
 	svg_end();	
 }
 
-int main() {
+static int writer(char* data, size_t size, size_t nmemb, std::string* writerData)
+{
+	if (writerData == NULL)
+		return 0;
+
+	writerData->append(data, size * nmemb);
+
+	return size * nmemb;
+}
+
+int main(int argc, wchar_t* argv[]) {
 	const auto input = read_input(cin, true);
 	const auto bins = make_histogram(input);
 
 	show_histogram_text(bins);
+
+	/*cout << "Hello curl";
+
+	string content;
+
+	curl_global_init(CURL_GLOBAL_ALL);
+	CURL* curl = nullptr;
+
+	curl = curl_easy_init();
+	if (curl) {
+		curl_easy_setopt(curl, CURLOPT_URL, "https://reqres.in/api/users?page=2");
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &content);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
+
+		CURLcode code = curl_easy_perform(curl);
+
+		curl_easy_cleanup(curl);
+	}
+	curl_global_cleanup();
+	cout << content;
+	return 0;*/
 }
