@@ -177,7 +177,7 @@ void svg_rect(double x, double y, double width, double height, string stroke, st
 	cout << "<rect x='" << x << "' y='" << y << "' width='" << width << "' height='" << height << "' stroke='" << stroke << "' fill='" << fill << "' />";
 }
 
-void show_histogram_svg(const vector<size_t>& bins) {
+void show_histogram_svg(const vector<size_t>& bins, string stroke) {
 	const auto IMAGE_WIDTH = 400;
 	const auto IMAGE_HEIGHT = 300;
 	auto TEXT_LEFT = 20;
@@ -198,25 +198,45 @@ void show_histogram_svg(const vector<size_t>& bins) {
 	for (size_t bin : bins) {
 		BIN_HEIGHT = BIN_BASELINE * (static_cast<double>(bin) / max_count);
 
-		svg_rect(TEXT_LEFT, BIN_BASELINE - BIN_HEIGHT, BIN_WIDTH, BIN_HEIGHT, "black", "gray");
+		svg_rect(TEXT_LEFT, BIN_BASELINE - BIN_HEIGHT, BIN_WIDTH, BIN_HEIGHT, stroke, "gray");
 		svg_text(TEXT_LEFT, TEXT_BASELINE, to_string(bin));
 		TEXT_LEFT += BIN_WIDTH + 10;
 	}
 
-	svg_end();	
+	svg_end();
 }
 
 int main(int argc, char* argv[]) {
 	Input input;
+	string stroke = "black";
+	string adress = "";
 
 	if (argc > 1) {
-		input = download(argv[1]);
+		for (int i = 0; i < argc; i++) {
+			string buf = argv[i];
+			if (buf == "-stroke") {
+				stroke = argv[i + 1];
+			}
+			if (buf.find("http") != string::npos) {
+				adress = argv[i];
+			}
+		}
+
+		if (argc == 2 || argc == 4) {
+			input = download(adress);
+		}
+		else {
+			cerr << "Something wrong" << '\n'
+				<< "Usage: " << argv[0] << " -stroke <color> [URL]" << '\n'
+				<< "or" << '\n'
+				<< argv[0] << " [URL]";
+		}
 	}
 	else input = read_input(cin, true);
 
 	const auto bins = make_histogram(input);
 
-	show_histogram_svg(bins);
+	show_histogram_svg(bins, stroke);
 
 	return 0;
 }
