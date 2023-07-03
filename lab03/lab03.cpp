@@ -3,8 +3,6 @@
 const size_t SCREEN_WIDTH = 80;
 const size_t MAX_ASTERISK = SCREEN_WIDTH - 3 - 1;
 
-
-
 vector<double> input_numbers(istream& in, size_t count) {
 	vector<double> result(count);
 
@@ -17,6 +15,7 @@ vector<double> input_numbers(istream& in, size_t count) {
 
 Input read_input(istream& in, bool prompt) {
 	Input data;
+
 	if (prompt) cerr << "Input the count of numbers: ";
 	size_t number_count;
 	in >> number_count;
@@ -33,6 +32,7 @@ Input read_input(istream& in, bool prompt) {
 pair <double, double> find_minmax(const vector<double> &numbers) {
 	double min = numbers[0];
 	double max = numbers[0];
+
 	for (double number : numbers) {
 		if (number < min) {
 			min = number;
@@ -41,6 +41,7 @@ pair <double, double> find_minmax(const vector<double> &numbers) {
 			max = number;
 		}
 	}
+
 	return pair<double, double>(min, max);
 }
 
@@ -74,13 +75,14 @@ vector<size_t> make_histogram(const Input& data) {
 
 void show_histogram_text(const vector<size_t> &bins) {
 	size_t max_count = 0;
+
 	for (size_t bin : bins) {
 		if (bin > max_count) {
 			max_count = bin;
 		}
 	}
 
-	cout << endl;
+	cout << '\n';
 
 	vector<size_t> bins_scaling(bins.size());
 
@@ -175,8 +177,7 @@ void show_histogram_svg(const vector<size_t>& bins) {
 	svg_end();	
 }
 
-static int writer(char* data, size_t size, size_t nmemb, std::string* writerData)
-{
+static int writer(char* data, size_t size, size_t nmemb, std::string* writerData) {
 	if (writerData == NULL)
 		return 0;
 
@@ -200,7 +201,7 @@ int main(int argc, wchar_t* argv[]) {
 
 	curl = curl_easy_init();
 	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, "https://reqres.in/api/users?page=2");
+		curl_easy_setopt(curl, CURLOPT_URL, "https://uii.bitbucket.io/study/courses/cs/lab04/part1.html");
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &content);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
 

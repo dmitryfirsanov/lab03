@@ -3,8 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
-#include "curl.h"
+#include <curl.h>
 using namespace std;
 
 struct Input {
